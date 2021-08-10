@@ -1,0 +1,8 @@
+$mailbox =get-mailbox -ResultSize unlimited | Where-Object { $_.OrganizationalUnit -ne "specific orgunit" } | Select-Object primarysmtpaddress, recipienttypedetails, samaccountname, whenmailboxcreated
+$mailbox | ForEach-Object {
+    $EmailAddress = "$($_.primarysmtpaddress)"
+    $MailboxType = $_.recipienttypedetails
+    $WinLogon = $_.samaccountname
+    $CreateDate = $_.whenmailboxcreated
+    Get-MailboxStatistics -Identity $EmailAddress
+} | Select-Object @{E={ $EmailAddress };L='PrimarySmtpAddress'}, @{E={ $MailboxType };L='RecipientTypeDetails'}, @{E={ $WinLogon };L='SamAccountName'}, @{E={ $CreateDate };L='WhenMailboxCreated'}, DatabaseName, TotalItemSize, TotalDeletedItemSize, DisplayName | Export-Csv MailboxInformation.csv -NoTypeInformation
