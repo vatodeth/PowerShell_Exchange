@@ -5,4 +5,4 @@ $mailbox | ForEach-Object {
     $WinLogon = $_.samaccountname
     $CreateDate = $_.whenmailboxcreated
     Get-MailboxStatistics -Identity $EmailAddress
-} | Select-Object @{E={ $EmailAddress };L='PrimarySmtpAddress'}, @{E={ $MailboxType };L='RecipientTypeDetails'}, @{E={ $WinLogon };L='SamAccountName'}, @{E={ $CreateDate };L='WhenMailboxCreated'}, DatabaseName, TotalItemSize, TotalDeletedItemSize, DisplayName | Export-Csv MailboxInformation.csv -NoTypeInformation
+} | Select-Object @{E={ $EmailAddress };L='PrimarySmtpAddress'}, @{E={ $MailboxType };L='RecipientTypeDetails'}, @{E={ $WinLogon };L='SamAccountName'}, @{E={ $CreateDate };L='WhenMailboxCreated'}, ServerName, DatabaseName, {$_.TotalItemSize.Value.ToMB()}, {$_.TotalDeletedItemSize.Value.ToMB()}, DisplayName | Export-Csv C:\Scripts\Ultimate_Mailbox_Report.csv -NoTypeInformation
